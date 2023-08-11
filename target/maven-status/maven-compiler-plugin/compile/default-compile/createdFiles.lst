@@ -1,0 +1,15 @@
+uniqueimpact\discord\rps_bot\discord\commands\RpsCommand.class
+uniqueimpact\discord\rps_bot\entity\Game.class
+uniqueimpact\discord\rps_bot\repository\PlayerRepository.class
+uniqueimpact\discord\rps_bot\discord\DiscordRunner.class
+uniqueimpact\discord\rps_bot\discord\listeners\CommandListener.class
+uniqueimpact\discord\rps_bot\entity\Round.class
+uniqueimpact\discord\rps_bot\discord\utils\CommandSetup.class
+uniqueimpact\discord\rps_bot\RpsBotApplication.class
+uniqueimpact\discord\rps_bot\entity\Player.class
+uniqueimpact\discord\rps_bot\discord\listeners\ReadyListener.class
+uniqueimpact\discord\rps_bot\util\Outcome.class
+uniqueimpact\discord\rps_bot\discord\commands\Command.class
+uniqueimpact\discord\rps_bot\discord\commands\CommandHandler.class
+uniqueimpact\discord\rps_bot\discord\listeners\MessageListener.class
+uniqueimpact\discord\rps_bot\util\Selection.class
