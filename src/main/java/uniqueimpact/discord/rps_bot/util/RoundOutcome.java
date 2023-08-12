@@ -1,12 +1,10 @@
 package uniqueimpact.discord.rps_bot.util;
 
-public enum GameStatus {
+public enum RoundOutcome {
 
-    PENDING,
-    IN_PROGRESS,
+    UNDECIDED,
     PLAYER_1_WIN,
     PLAYER_2_WIN,
-    TIE,
-    CANCELLED;
+    TIE;
 
 }

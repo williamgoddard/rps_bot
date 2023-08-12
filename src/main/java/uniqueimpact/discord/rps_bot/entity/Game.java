@@ -1,10 +1,7 @@
 package uniqueimpact.discord.rps_bot.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import uniqueimpact.discord.rps_bot.util.GameStatus;
 
 @Entity
@@ -12,18 +9,18 @@ import uniqueimpact.discord.rps_bot.util.GameStatus;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Game {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "player1_id")
     private Player player1;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "player2_id")
     private Player player2;
 
@@ -48,4 +45,6 @@ public class Game {
     @Column(nullable = false)
     private GameStatus status = GameStatus.PENDING;
 
+    @Column(nullable = false)
+    private Integer roundNum = 1;
 }

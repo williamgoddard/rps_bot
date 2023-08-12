@@ -3,16 +3,20 @@ package uniqueimpact.discord.rps_bot.discord.commands;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.Interaction;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uniqueimpact.discord.rps_bot.discord.senders.RpsSender;
+import uniqueimpact.discord.rps_bot.discord.utils.WebhookStore;
 import uniqueimpact.discord.rps_bot.entity.Game;
 import uniqueimpact.discord.rps_bot.entity.Player;
+import uniqueimpact.discord.rps_bot.entity.Round;
 import uniqueimpact.discord.rps_bot.service.GameService;
 import uniqueimpact.discord.rps_bot.service.PlayerService;
+import uniqueimpact.discord.rps_bot.service.RoundService;
 import uniqueimpact.discord.rps_bot.util.GameStatus;
+import uniqueimpact.discord.rps_bot.util.Selection;
 
 import java.util.List;
 
@@ -24,6 +28,12 @@ public class RpsCommand implements Command {
 
     @Autowired
     private GameService gameService;
+
+    @Autowired
+    private RoundService roundService;
+
+    @Autowired
+    private RpsSender roundSender;
 
     @Override
     public void run(SlashCommandInteractionEvent command) {
@@ -82,8 +92,10 @@ public class RpsCommand implements Command {
         game.setPlayer1Score(0);
         game.setPlayer2Score(0);
         game.setStatus(GameStatus.PENDING);
+        game.setRoundNum(1);
 
-        gameService.save(game);
+        game = gameService.save(game);
+        WebhookStore.setWebhook(game.getId() + ":1", hook);
 
         channel.sendMessage(challenger_user.getAsMention() + " challenged " + challenged_user.getAsMention() + " to a game of Rock Paper Scissors!\nUse `/rps accept` to accept the challenge!").queue();
 
@@ -139,6 +151,8 @@ public class RpsCommand implements Command {
 
             game = challenges.get(0);
 
+            challenger_user = command.getJDA().getUserById(game.getPlayer1().getId());
+
         }
 
         TextChannel channel = command.getChannel().asTextChannel();
@@ -149,7 +163,21 @@ public class RpsCommand implements Command {
 
         game.setStatus(GameStatus.IN_PROGRESS);
 
-        gameService.save(game);
+        game = gameService.save(game);
+
+        Round round = new Round();
+        round.setGame(game);
+        round.setRoundNum(1);
+        round.setPlayer1Choice(Selection.UNDECIDED);
+        round.setPlayer2Choice(Selection.UNDECIDED);
+
+        roundService.save(round);
+
+        WebhookStore.setWebhook(game.getId() + ":2", hook);
+
+        roundSender.sendNextRound(game);
+
+        channel.sendMessage(challenged_user.getAsMention() + " accepted the challenge of " + challenger_user.getAsMention() + "!").queue();
 
     }
 

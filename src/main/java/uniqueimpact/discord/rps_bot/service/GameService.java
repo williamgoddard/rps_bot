@@ -20,6 +20,10 @@ public class GameService {
         return gameRepository.save(game);
     }
 
+    public Game find(Integer id) {
+        return gameRepository.findById(id).orElse(null);
+    }
+
     public Game find(Player challenger, Player challenged, GameStatus status) {
 
         if (challenger == null && challenged == null) {
